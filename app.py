@@ -7,7 +7,7 @@ from processor import process_video
 from dotenv import load_dotenv
 
 load_dotenv()
-YT_API_HOSTNAME = os.getenv("YT_API_HOSTNAME")
+YT_API_HOSTNAME = os.environ.get("YT_API_HOSTNAME")
 
 def get_youtube_video(_url):
     if not _url:
