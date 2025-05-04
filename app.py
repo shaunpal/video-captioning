@@ -35,18 +35,20 @@ with vid_caption:
     with st.form('video_upload'):
         video_file = st.file_uploader("Upload a video file", type=["mp4", "mov", "avi"], accept_multiple_files=False)
         vid_temp = NamedTemporaryFile(dir=TEMP_FOLDER_DIR, delete=True, suffix='.mp4')
-        if st.form_submit_button("Upload"):
+        submit_button = st.form_submit_button("Upload")
+        if submit_button:
             if not video_file:
                 st.error("Please upload a video file")
                 st.stop()
-            contents = video_file.read()
-            vid_temp.write(contents)
-            with st.status("Processing the video...", expanded=True):
-                output_video_temp_file, output_subtitle_temp_file = process_video(vid_temp, chosen_language.lower())
-                st.balloons()
+            else:
+                contents = video_file.read()
+                vid_temp.write(contents)
+                with st.status("Processing the video...", expanded=True):
+                    output_video_temp_file, output_subtitle_temp_file = process_video(vid_temp, chosen_language.lower())
+                    st.balloons()
 
-                with open(output_video_temp_file.name, 'rb') as video_temp_file:
-                    st.video(video_temp_file.read(), subtitles=f"{output_subtitle_temp_file.name}")
+                    with open(output_video_temp_file.name, 'rb') as video_temp_file:
+                        st.video(video_temp_file.read(), subtitles=f"{output_subtitle_temp_file.name}")
 
 with (you_extract):
     st.title("YouTube video extractor")
