@@ -34,9 +34,13 @@ with vid_caption:
 
     with st.form('video_upload'):
         video_file = st.file_uploader("Upload a video file", type=["mp4", "mov", "avi"], accept_multiple_files=False)
+        os.makedirs(TEMP_FOLDER_DIR, exist_ok=True)
         vid_temp = NamedTemporaryFile(dir=TEMP_FOLDER_DIR, delete=True, suffix='.mp4')
         submitted = st.form_submit_button("Upload")
         if submitted:
+            if not video_file:
+                st.error("Please upload a video file")
+                st.stop()
             contents = video_file.read()
             vid_temp.write(contents)
             with st.status("Processing the video...", expanded=True):
