@@ -7,6 +7,9 @@ from whisper.utils import get_writer
 from tempfile import NamedTemporaryFile
 from googletrans import Translator
 
+
+TEMP_FOLDER_DIR = './temp'
+
 SUPPORTED_LANGUAGES = {
     'afrikaans': 'af',
     'albanian': 'sq',
@@ -133,7 +136,7 @@ def extract_audio_and_generate_subtitles(video_file, desired_language, subtitle_
         asyncio.run(translate_text(result, target_language))
 
     # Create a temporary subtitle file for writing
-    temp_subtitle_file = NamedTemporaryFile('w+', delete=False, suffix=f'.{subtitle_format}')
+    temp_subtitle_file = NamedTemporaryFile('w+', dir=TEMP_FOLDER_DIR, delete=False, suffix=f'.{subtitle_format}')
 
     # Write the subtitles to the temporary file
     st.write("Generating caption...")
@@ -145,7 +148,7 @@ def extract_audio_and_generate_subtitles(video_file, desired_language, subtitle_
 
 def embed_subtitles_to_video(video_file, subtitle_file):
     # Create a temporary video file for writing
-    video_file_output = NamedTemporaryFile(delete=False, suffix=".mp4")
+    video_file_output = NamedTemporaryFile(dir=TEMP_FOLDER_DIR, delete=False, suffix=".mp4")
 
     # Use ffmpeg to embed subtitles into the video
     st.write("Embedding subtitles to video...")
@@ -159,7 +162,7 @@ def embed_subtitles_to_video(video_file, subtitle_file):
 
 def create_deletable_temp_copy_and_remove_file(original_file, temp_file_extension, temp_file_mode):
     # Create a temporary file
-    temp_file = NamedTemporaryFile(temp_file_mode, delete=True, suffix=f".{temp_file_extension}")
+    temp_file = NamedTemporaryFile(temp_file_mode, dir=TEMP_FOLDER_DIR, delete=True, suffix=f".{temp_file_extension}")
     read_mode = 'r' if temp_file_mode == 'w+' else 'rb'
     with open(original_file.name, read_mode) as f:
         temp_file.write(f.read())
